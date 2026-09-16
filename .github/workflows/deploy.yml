@@ -1,0 +1,21 @@
+# Rebuilds the portfolio on Cloudflare Pages whenever a post changes.
+# Setup: Pages project → Settings → Builds → Deploy hooks → create one, then save its URL
+# in this repo as the secret CF_PAGES_DEPLOY_HOOK (Settings → Secrets and variables → Actions).
+name: Deploy portfolio
+
+on:
+  push:
+    branches: [main]
+    paths: ['posts/**']
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages deploy hook
+        env:
+          HOOK: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::error::CF_PAGES_DEPLOY_HOOK secret is not set"; exit 1; fi
+          curl -fsS -X POST "$HOOK"
