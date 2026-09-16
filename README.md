@@ -24,6 +24,6 @@ Images go in `posts/images/` and are referenced with relative paths. Link to ano
 ## One-time setup
 
 1. In the Cloudflare Pages project: **Settings → Builds → Deploy hooks → Add deploy hook** (branch: the production branch).
-2. In this repo: **Settings → Secrets and variables → Actions → New secret** named `CF_PAGES_DEPLOY_HOOK` with the hook URL.
+2. In this repo: **Settings → Webhooks → Add webhook**. Payload URL: the hook URL. Content type: `application/json`. Events: **Just the push event**. (GitHub pings the hook once on save, which starts a build.)
 
-`.github/workflows/deploy.yml` calls the hook on every push that touches `posts/`.
+The webhook calls the hook on every push, so no GitHub Actions minutes are needed. To redeploy by hand: `curl -X POST <hook URL>`.
